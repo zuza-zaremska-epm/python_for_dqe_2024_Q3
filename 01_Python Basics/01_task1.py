@@ -1,5 +1,5 @@
+# Import necessary modules.
 import random
-
 from statistics import mean
 
 # Create list of 100 random numbers from 0 to 1000
