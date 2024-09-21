@@ -60,9 +60,8 @@ def count_whitespaces(text: str):
     :param text: text to analyze
     """
     whitespaces = 0
-    for char in homework:
-        if char in string.whitespace:
-            whitespaces += 1
+    for char in string.whitespace:
+        whitespaces += text.count(char)
 
     print(f'Whitespaces found in text: {whitespaces}')
 
