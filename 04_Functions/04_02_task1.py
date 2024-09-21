@@ -31,42 +31,59 @@ def generate_list_of_dicts() -> List[dict]:
     return list_of_dicts
 
 
-random_dicts = generate_list_of_dicts()
-# 2. Get previously generated list of dicts and create one common dict:
-# if dicts have same key, we will take max value, and rename key with dict number with max value
-# if key is only in one dict - take it as is,
-# example: {'a_1': 5, 'b': 7, 'c': 35, 'g_2': 42}
-working_dict = {}
-for idx, dictionary in enumerate(random_dicts):
-    dict_num = idx + 1
+def create_working_dictionary(list_of_dicts: List[dict]) -> dict:
+    working_dict = {}
+    for idx, dictionary in enumerate(list_of_dicts):
+        dict_num = idx + 1
 
-    for key, new_value in dictionary.items():
-        # If the key already exists in the working directory then:
-        if working_dict.get(key):
-            # Update number of occurrences.
-            working_dict[key]['occurrence'] += 1
-            old_key_value = working_dict[key]['value']
+        for key, new_value in dictionary.items():
+            # If the key already exists in the working directory then:
+            if working_dict.get(key):
+                # Update number of occurrences.
+                working_dict[key]['occurrence'] += 1
+                old_key_value = working_dict[key]['value']
 
-            # If new value is bigger than the previous one than update
-            # this value and dictionary number.
-            if new_value > old_key_value:
-                working_dict[key].update({'dict_num': dict_num, 'value': new_value})
-        # If key doesn't exist in the working dictionary add new record.
+                # If new value is bigger than the previous one than update
+                # this value and dictionary number.
+                if new_value > old_key_value:
+                    working_dict[key].update(
+                        {'dict_num': dict_num, 'value': new_value})
+            # If key doesn't exist in the working dictionary add new record.
+            else:
+                # Save key, dictionary number and value in the working dictionary.
+                working_dict[key] = {
+                    'dict_num': dict_num,
+                    'value': new_value,
+                    'occurrence': 1
+                }
+
+    return working_dict
+
+
+def generate_common_dict(list_of_dicts: List[dict]) -> dict:
+    """
+    From the given list of dictionaries create one common dict where:
+    1. If dicts have same key, we will take max value, and rename key
+    with dict number with max value.
+    2. If key is only in one dict - take it as is.
+    :param list_of_dicts: list of random number of dictionaries
+    :return: common dictionary
+    Example: {'a_1': 5, 'b': 7, 'c': 35, 'g_2': 42}
+    """
+    common_dict = {}
+
+    working_dict = create_working_dictionary(list_of_dicts)
+    for k, v in working_dict.items():
+        # If key occurred more than once add to the key name dictionary number.
+        if v['occurrence'] > 1:
+            dict_num = working_dict[k]['dict_num']
+            common_dict[f'{k}_{dict_num}'] = v['value']
         else:
-            # Save key, dictionary number and value in the working dictionary.
-            working_dict[key] = {
-                'dict_num': dict_num,
-                'value': new_value,
-                'occurrence': 1
-            }
+            common_dict[k] = v['value']
 
-common_dict = {}
-for k, v in working_dict.items():
-    # If key occurred more than once add to the key name dictionary number.
-    if v['occurrence'] > 1:
-        dict_num = working_dict[k]['dict_num']
-        common_dict[f'{k}_{dict_num}'] = v['value']
-    else:
-        common_dict[k] = v['value']
+    print(f'Common dictionary: {len(common_dict)} keys.\n', common_dict)
+    return common_dict
 
-print(f'Common dictionary: {len(common_dict)} keys.\n', common_dict)
+
+list_of_random_dicts = generate_list_of_dicts()
+common_dictionary = generate_common_dict(list_of_random_dicts)
