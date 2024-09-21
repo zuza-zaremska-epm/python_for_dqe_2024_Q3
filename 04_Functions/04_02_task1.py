@@ -32,26 +32,30 @@ def generate_list_of_dicts() -> List[dict]:
 
 
 def create_working_dictionary(list_of_dicts: List[dict]) -> dict:
+    """
+    Create working dictionary with kaye and details about number of occurrences
+    in different dictionaries, max value found and max value source dictionary.
+    :param list_of_dicts: list of random number of dictionaries
+    :return: collection of keys with their details
+    Schema: {
+        'g': {'occurrence': 2, 'dict_num': 3, 'value': 5},
+        'b': {'occurrence': 1, 'dict_num': 1, 'value': 1},
+        'd': {'occurrence': 8, 'dict_num': 1, 'value': 9},
+    }
+    """
     working_dict = {}
-    for idx, dictionary in enumerate(list_of_dicts):
-        dict_num = idx + 1
+    for number, dictionary in enumerate(list_of_dicts):
+        dict_num = number + 1
 
-        for key, new_value in dictionary.items():
-            # If the key already exists in the working directory then:
-            if working_dict.get(key):
-                # Update number of occurrences.
-                working_dict[key]['occurrence'] += 1
-                old_key_value = working_dict[key]['value']
-
-                # If new value is bigger than the previous one than update
-                # this value and dictionary number.
-                if new_value > old_key_value:
-                    working_dict[key].update(
+        for letter, new_value in dictionary.items():
+            if working_dict.get(letter):
+                working_dict[letter]['occurrence'] += 1
+                old_letter_value = working_dict[letter]['value']
+                if new_value > old_letter_value:
+                    working_dict[letter].update(
                         {'dict_num': dict_num, 'value': new_value})
-            # If key doesn't exist in the working dictionary add new record.
             else:
-                # Save key, dictionary number and value in the working dictionary.
-                working_dict[key] = {
+                working_dict[letter] = {
                     'dict_num': dict_num,
                     'value': new_value,
                     'occurrence': 1
@@ -73,13 +77,12 @@ def generate_common_dict(list_of_dicts: List[dict]) -> dict:
     common_dict = {}
 
     working_dict = create_working_dictionary(list_of_dicts)
-    for k, v in working_dict.items():
-        # If key occurred more than once add to the key name dictionary number.
-        if v['occurrence'] > 1:
-            dict_num = working_dict[k]['dict_num']
-            common_dict[f'{k}_{dict_num}'] = v['value']
+    for letter, value in working_dict.items():
+        if value['occurrence'] > 1:
+            dict_num = working_dict[letter]['dict_num']
+            common_dict[f'{letter}_{dict_num}'] = value['value']
         else:
-            common_dict[k] = v['value']
+            common_dict[letter] = value['value']
 
     print(f'Common dictionary: {len(common_dict)} keys.\n', common_dict)
     return common_dict
