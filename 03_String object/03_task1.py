@@ -47,7 +47,7 @@ def normalize_text(text: str) -> str:
 
 def fix_iz(text: str) -> str:
     """
-    Replace 'iz' with 'is' when it's a mistake.
+    Replace 'iz' with 'is' when it's not enclosed in the double quotes.
     :param text: text to fix
     :return: fixed text
     """
