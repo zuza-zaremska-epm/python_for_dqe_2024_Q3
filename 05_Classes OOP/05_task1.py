@@ -45,7 +45,7 @@ class News(Feed):
 class PrivateAd(Feed):
     def __init__(self, text: str, exp_date: str):
         super().__init__(text)
-        self.exp_date = pendulum.parse(exp_date).date()
+        self.exp_date = pendulum.parse(exp_date, strict=False).date()
         self.days_left = (self.exp_date - self.insert_date.date()).days
         self.feed = f'\n--- PRIVATE AD ---\n{self.text}\nActual until: {self.exp_date.format("YYYY-MM-DD")} ({self.days_left} days left)'
         print(self.feed)
