@@ -90,7 +90,6 @@ def create_feed_by_category(category: str):
 
 # Create new feed file if not exists.
 Feed.create_feed_file()
-next_feed = True
 
 while True:
     # Take an information from user.
@@ -98,8 +97,6 @@ while True:
     create_feed_by_category(user_category)
 
     next_insert = input('Do you want to insert another (y/n)? ').lower()
-    if next_insert in ['y', 'yes']:
-        continue
-    else:
+    if next_insert not in ['y', 'yes']:
         print('\nFile has been saved.')
         break
