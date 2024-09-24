@@ -46,7 +46,6 @@ class PrivateAd(Feed):
     def __init__(self, text: str, exp_date: str):
         super().__init__(text)
         self.exp_date = pendulum.parse(exp_date).date()
-        print(self.exp_date)
         self.days_left = (self.exp_date - self.insert_date.date()).days
         self.feed = f'\n--- PRIVATE AD ---\n{self.text}\nActual until: {self.exp_date.format("YYYY-MM-DD")} ({self.days_left} days left)'
         print(self.feed)
@@ -61,22 +60,19 @@ class Journal(Feed):
         print(self.feed)
 
 
-# Create new feed file if nox exists.
-Feed.create_feed_file()
-next_feed = True
-
-while next_feed:
-    # Take an information from user.
-    user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ').lower()
-
-    if user_category == 'news':
+def create_feed_by_category(category: str):
+    """
+    Creates feed by the given category.
+    :param category: name of the feed category/type
+    """
+    if category in ['news', 'new']:
         user_city = input('Provide city name: ').lower().title()
         news_text = input('Provide news text: ')
 
         news = News(news_text, user_city)
         news.save_feed()
 
-    elif user_category in ['private ad', 'private', 'ad', 'priv']:
+    elif category in ['private ad', 'private', 'ad', 'priv']:
         ad_text = input('Provide advertisement text: ')
         expiration_date = input('Provide expiration date (YYYY-MM-DD): ')
 
@@ -84,17 +80,26 @@ while next_feed:
         ad.save_feed()
 
     else:
-        mood = input("What's your mood today: ")
+        mood = input("What's your mood today: ").lower()
         journal_text = input('Provide journal text: ')
         user_name = input('Provide your name ').lower().title()
 
         journal = Journal(journal_text, user_name, mood)
         journal.save_feed()
 
+
+# Create new feed file if not exists.
+Feed.create_feed_file()
+next_feed = True
+
+while True:
+    # Take an information from user.
+    user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ').lower()
+    create_feed_by_category(user_category)
+
     next_insert = input('Do you want to insert another (y/n)? ').lower()
     if next_insert in ['y', 'yes']:
-        next_feed = True
+        continue
     else:
-        next_feed = False
-
-print('\nFile has been saved.')
+        print('\nFile has been saved.')
+        break
