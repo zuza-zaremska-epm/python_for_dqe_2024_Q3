@@ -1,11 +1,15 @@
 import pendulum
 import os
 
+from abc import ABC, abstractmethod
 
-class Feed:
+
+class Feed(ABC):
     file_path = 'Feed.txt'
 
-    def __init__(self):
+    def __init__(self, text):
+        self.text = text
+        self.feed = ''
         self.insert_date = pendulum.now()
         self.feed = ''
 
@@ -20,6 +24,11 @@ class Feed:
         """Saves created feed in the txt file."""
         with open(self.file_path, 'a', encoding='utf-8') as file:
             file.write(self.feed + '\n')
+
+    @abstractmethod
+    def get_data_from_user(self):
+        """Overwrite attributes with data from the user."""
+        pass
 
 
 class News(Feed):
