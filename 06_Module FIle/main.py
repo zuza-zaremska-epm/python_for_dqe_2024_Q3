@@ -6,6 +6,31 @@
 from feeds import Input, Feed, News, PrivateAd, Journal
 
 
+def create_feed_by_category(category: str, input_collection: dict):
+    """
+    Creates feed by the given category.
+    :param category: name of the feed category
+    :param input_collection: data provided for the feed
+    """
+    category = category.lower()
+
+    if category in ['news', 'new']:
+        text = input_data.get('text')
+        city = input_data.get('city')
+        feed = News(text, city)
+    elif category in ['private ad', 'private', 'ad', 'priv']:
+        text = input_data.get('text')
+        exp_date = input_data.get('exp_date')
+        feed = PrivateAd(text, exp_date)
+    else:
+        text = input_data.get('text')
+        name = input_data.get('name')
+        mood = input_data.get('mood')
+        feed = Journal(text, name, mood)
+
+    feed.save_feed()
+
+
 # Get information about input type.
 data_type = input('Do you want to enter data manually/by file? (m/f) ').lower()
 
