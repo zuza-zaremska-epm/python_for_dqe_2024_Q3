@@ -92,34 +92,3 @@ class Input:
         for path in self.paths_list:
             self.change_path(path)
             self.read_input_parameters()
-
-
-def create_feed_by_category(category: str):
-    """
-    Creates feed by the given category.
-    :param category: name of the feed category/type
-    """
-    category = category.lower()
-
-    if category in ['news', 'new']:
-        feed = News()
-    elif category in ['private ad', 'private', 'ad', 'priv']:
-        feed = PrivateAd()
-    else:
-        feed = Journal()
-
-    feed.save_feed()
-
-
-# Create new feed file if not exists.
-Feed.create_feed_file()
-
-while True:
-    # Take an information from user.
-    user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
-    create_feed_by_category(user_category)
-
-    next_insert = input('Do you want to insert another (y/n)? ').lower()
-    if next_insert not in ['y', 'yes']:
-        print('\nFile has been saved.')
-        break
