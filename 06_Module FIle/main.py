@@ -46,60 +46,23 @@ if data_type == 'f':
         file_input = Input()
         file_input.get_input_from_all_files()
 
-# Create new feed file if nox exists.
+
+# Create new feed file if not exists.
 Feed.create_feed_file()
 next_feed = True
 
-while next_feed:
+while True:
     if data_type == 'm':
-        # Take an information from user.
-        user_category = input('What category you want to add?\n"News" | "Private ad" | "Note": ').lower()
+        user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
+        input_data = {}
     else:
         user_category = file_input.input[feed_counter]['category'].lower()
 
-    if user_category == 'news':
-        if data_type == 'm':
-            news_text = input('Provide news text: ')
-            user_city = input('Provide city name: ').lower().title()
-        else:
-            news_text = file_input.input[feed_counter]['text']
-            user_city = file_input.input[feed_counter]['additional']
-
-        news = News(news_text, user_city)
-        news.save_feed()
-
-    elif user_category == 'private ad':
-        if data_type == 'm':
-            ad_text = input('Provide advertisement text: ')
-            expiration_date = input('Provide expiration date (dd-mm-yyyy): ')
-        else:
-            ad_text = file_input.input[feed_counter]['text']
-            expiration_date = file_input.input[feed_counter]['additional']
-
-        ad = PrivateAd(ad_text, expiration_date)
-        ad.save_feed()
-
-    else:
-        if data_type == 'm':
-            note_text = input('Provide note text: ')
-            user_name = input('Provide your name ').lower().title()
-        else:
-            note_text = file_input.input[feed_counter]['text']
-            user_name = file_input.input[feed_counter]['additional']
-
-        note = Note(note_text, user_name)
-        note.save_feed()
+    create_feed_by_category(user_category, input_data)
 
     if data_type == 'm':
-        next_insert = input('Do you want to insert another (y/n)? ').lower()
-        if next_insert in ['y', 'yes']:
-            next_feed = True
-        else:
-            next_feed = False
-    else:
-        feed_counter += 1
-        if feed_counter == len(file_input.input):
-            next_feed = False
-
+        next_insert = input('Do you want to insert another (y/n)? ')
+        if next_insert.lower() not in ['y', 'yes']:
+            break
 
 print('\nFile has been saved.')
