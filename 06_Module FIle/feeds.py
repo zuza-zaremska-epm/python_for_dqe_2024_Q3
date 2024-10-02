@@ -11,7 +11,6 @@ class Feed(ABC):
         self.text = text
         self.feed = ''
         self.insert_date = pendulum.now()
-        self.feed = ''
 
     @classmethod
     def create_feed_file(cls):
