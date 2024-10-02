@@ -31,16 +31,13 @@ def create_feed_by_category(category: str, input_collection: dict):
     feed.save_feed()
 
 
-# Get information about input type.
-data_type = input('Do you want to enter data manually/by file? (m/f) ').lower()
-
-if data_type == 'f':
-    feed_counter = 0
-    custom_path = input('Do you want to provide path to the file? (y/n) ').lower()
-
-    if custom_path == 'y' or custom_path == 'yes':
+# Get information about data ingestion type.
+ingestion = input('Do you want to enter data manually/by file? (m/f) ').lower()
+if ingestion in ['f', 'by file', 'file']:
+    custom_path = input('Do you want to provide path to the file? (y/n) ')
+    if custom_path.lower() in ['y', 'yes']:
         custom_path = input('Enter path to the txt file with the input: ').lower()
-        file_input = Input(custom_path, False)
+        file_input = Input(path=custom_path)
         file_input.read_input_parameters()
     else:
         file_input = Input()
@@ -49,18 +46,22 @@ if data_type == 'f':
 
 # Create new feed file if not exists.
 Feed.create_feed_file()
-next_feed = True
-
+feed_counter = 0
+# Populate feed file with data.
 while True:
-    if data_type == 'm':
-        user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
-        input_data = {}
+    if ingestion in ['f', 'by file', 'file']:
+        feed_counter += 1
+        input_data = file_input.input[feed_counter]
+        feed_category = input_data.get('category')
+        create_feed_by_category(feed_category, input_data)
+
+        if feed_counter == len(file_input.input):
+            break
+
     else:
-        user_category = file_input.input[feed_counter]['category'].lower()
+        user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
+        create_feed_by_category(user_category, {})
 
-    create_feed_by_category(user_category, input_data)
-
-    if data_type == 'm':
         next_insert = input('Do you want to insert another (y/n)? ')
         if next_insert.lower() not in ['y', 'yes']:
             break

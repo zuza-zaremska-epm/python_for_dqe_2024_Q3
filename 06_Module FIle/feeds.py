@@ -76,7 +76,7 @@ class Journal(Feed):
 
     def get_data_from_user(self):
         self.text = input('Provide journal text: ')
-        self.name = input('Provide your name ').title()
+        self.name = input('Provide your name: ').title()
         self.mood = input("What's your mood today: ").lower()
 
 
@@ -88,8 +88,6 @@ class Input:
         self.input = []
         if self.path == Input.default_path:
             self.input_files = [file for file in os.listdir(self.path) if file.endswith('.txt')]
-            self.path_id = 0
-            self.files_total = len(self.input_files)
 
     def change_path(self, new_path):
         self.path = Input.default_path + new_path

@@ -1,0 +1,12 @@
+category: 'news';
+text: 'This is the news text from input txt file 1.';
+city: 'Kraków';
+<next_feed>
+category: 'private ad';
+text: 'This is the private advertisement text from input txt file 1.';
+exp_date: '31-10-2023';
+<next_feed>
+category: 'journal';
+text: 'This is my journal text from input txt file 1.';
+name: 'Susan';
+mood: 'happy';
