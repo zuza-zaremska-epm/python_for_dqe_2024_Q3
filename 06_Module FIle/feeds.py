@@ -32,32 +32,52 @@ class Feed(ABC):
 
 
 class News(Feed):
-    def __init__(self):
-        super().__init__()
-        self.city = input('Provide city name: ').lower().title()
-        self.text = input('Provide news text: ')
+    def __init__(self, text, city):
+        super().__init__(text)
+        self.city = city
+        if not text:
+            self.get_data_from_user()
+
         self.feed = f'\n--- NEWS ---\n{self.text}\n{self.city}, {self.insert_date.format("YYYY-MM-DD HH:mm")}'
         print(self.feed)
 
+    def get_data_from_user(self):
+        self.city = input('Provide city name: ').title()
+        self.text = input('Provide news text: ')
+
 
 class PrivateAd(Feed):
-    def __init__(self):
-        super().__init__()
-        self.text = input('Provide advertisement text: ')
-        self.exp_date = pendulum.parse(input('Provide expiration date (YYYY-MM-DD): '), strict=False).date()
+    def __init__(self, text, exp_date):
+        super().__init__(text)
+        self.exp_date = exp_date
+        if not text:
+            self.get_data_from_user()
+
         self.days_left = (self.exp_date - self.insert_date.date()).days
         self.feed = f'\n--- PRIVATE AD ---\n{self.text}\nActual until: {self.exp_date.format("YYYY-MM-DD")} ({self.days_left} days left)'
         print(self.feed)
 
+    def get_data_from_user(self):
+        self.text = input('Provide advertisement text: ')
+        expiration_date = input('Provide expiration date (YYYY-MM-DD): ')
+        self.exp_date = pendulum.parse(expiration_date, strict=False).date()
+
 
 class Journal(Feed):
-    def __init__(self):
-        super().__init__()
-        self.text = input('Provide journal text: ')
-        self.name = input('Provide your name ').lower().title()
-        self.mood = input("What's your mood today: ").lower()
+    def __init__(self, text, name, mood):
+        super().__init__(text)
+        self.name = name
+        self.mood = mood
+        if not text:
+            self.get_data_from_user()
+
         self.feed = f'\n--- JOURNAL ---\n{self.text}\nI feel {self.mood} today.\n{self.name}, {self.insert_date.format("YYYY-MM-DD HH:mm")}'
         print(self.feed)
+
+    def get_data_from_user(self):
+        self.text = input('Provide journal text: ')
+        self.name = input('Provide your name ').title()
+        self.mood = input("What's your mood today: ").lower()
 
 
 class Input:
