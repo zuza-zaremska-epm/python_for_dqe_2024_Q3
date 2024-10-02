@@ -2,6 +2,7 @@ import pendulum
 import os
 
 from abc import ABC, abstractmethod
+from string import whitespace
 
 
 class Feed(ABC):
@@ -21,7 +22,7 @@ class Feed(ABC):
 
     def save_feed(self):
         """Saves created feed in the txt file."""
-        with open(self.file_path, 'a', encoding='utf-8') as file:
+        with open(Feed.file_path, 'a', encoding='utf-8') as file:
             file.write(self.feed + '\n')
 
     @abstractmethod
@@ -80,35 +81,50 @@ class Journal(Feed):
 
 
 class Input:
-    def __init__(self, path='input/', default=True):
-        self.path = path
+    default_path = 'input/'
+
+    def __init__(self, path=''):
+        self.path = path if path else Input.default_path
         self.input = []
-        if default:
-            self.paths_list = [file for file in os.listdir(self.path) if file.endswith('.txt')]
+        if self.path == Input.default_path:
+            self.input_files = [file for file in os.listdir(self.path) if file.endswith('.txt')]
             self.path_id = 0
-            self.paths_num = len(self.paths_list)
+            self.files_total = len(self.input_files)
 
     def change_path(self, new_path):
-        self.path = 'input/' + new_path
+        self.path = Input.default_path + new_path
 
     def delete_input_file(self):
         """Removes current file with input data."""
         os.remove(self.path)
 
+    @staticmethod
+    def create_input_collection(feed: str) -> dict:
+        """
+        From the given feed retrieve input parameters.
+        :param feed: feed details
+        :return: collection of feed input data
+        """
+        input_collection = {}
+
+        for row in feed.split(';'):
+            row = row.strip(whitespace)
+            key = row[:row.find(':')]
+            value = row[row.find("'"):-1]
+            input_collection[key] = value
+
+        return input_collection
+
     def read_input_parameters(self):
+        """
+        Read all feeds data from the file currently specified in the
+        path attribute. Remove file after reading data.
+        """
         with open(self.path, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
-            loops = len(lines) // 4
-
-            for i in range(loops):
-                input_param = {
-                    'category': lines[0].split("'")[1],
-                    'text': lines[1].split("'")[1],
-                    'additional': lines[2].split("'")[1]
-                }
-
+            feeds = file.read().split('<next_feed>')
+            for feed in feeds:
+                input_param = self.create_input_collection(feed)
                 self.input.append(input_param)
-                lines = lines[4:]
 
         self.delete_input_file()
 
@@ -117,6 +133,6 @@ class Input:
         Scans all available files in the default directory, retrieve
         input data and deletes the file.
         """
-        for path in self.paths_list:
+        for path in self.input_files:
             self.change_path(path)
             self.read_input_parameters()
