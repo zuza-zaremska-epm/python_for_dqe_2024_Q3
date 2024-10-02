@@ -15,17 +15,17 @@ def create_feed_by_category(category: str, input_collection: dict):
     category = category.lower()
 
     if category in ['news', 'new']:
-        text = input_data.get('text')
-        city = input_data.get('city')
+        text = input_collection.get('text')
+        city = input_collection.get('city')
         feed = News(text, city)
     elif category in ['private ad', 'private', 'ad', 'priv']:
-        text = input_data.get('text')
-        exp_date = input_data.get('exp_date')
+        text = input_collection.get('text')
+        exp_date = input_collection.get('exp_date')
         feed = PrivateAd(text, exp_date)
     else:
-        text = input_data.get('text')
-        name = input_data.get('name')
-        mood = input_data.get('mood')
+        text = input_collection.get('text')
+        name = input_collection.get('name')
+        mood = input_collection.get('mood')
         feed = Journal(text, name, mood)
 
     feed.save_feed()
