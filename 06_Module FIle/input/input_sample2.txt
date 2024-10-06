@@ -4,9 +4,9 @@ city: 'Gdańsk';
 <next_feed>
 category: 'private ad';
 text: 'This is the private advertisement text from input txt file 2.';
-exp_date: '26-10-2023';
+exp_date: '26-10-2024';
 <next_feed>
-category: 'note';
-text: 'This is my note text from input txt file 2.';
+category: 'journal';
+text: 'This is my journal text from input txt file 2.';
 name: 'Jenny';
 mood: 'unhappy';
