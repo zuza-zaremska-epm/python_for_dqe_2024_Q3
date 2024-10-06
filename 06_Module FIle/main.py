@@ -23,7 +23,6 @@ def create_feed_by_category(input_details: dict):
         elif category in ['private ad', 'private', 'ad', 'priv']:
             text = input_details.get('text')
             exp_date = input_details.get('exp_date')
-            print(exp_date)
             feed = PrivateAd(text, exp_date)
         else:
             text = input_details.get('text')
@@ -40,10 +39,10 @@ get_feeds = True
 
 while get_feeds:
     # Get information about data ingestion type.
-    ingestion = input('Do you want to enter data manually/by file? (m/f) ').lower()
+    ingestion = input('\nDo you want to enter data manually/by file? (m/f) ').lower()
     if ingestion in ['f', 'by file', 'file', 'files']:
         file_input = Input()
-        custom_path = input('Do you want to provide path to the file? (y/n) ')
+        custom_path = input('\nDo you want to provide path to the file? (y/n) ')
         if custom_path.lower() in ['y', 'yes']:
             file_input.get_path_from_user()
         else:
@@ -58,7 +57,7 @@ while get_feeds:
         feed_params = {'category': user_category}
         create_feed_by_category(feed_params)
 
-    next_insert = input('Do you want to insert another (y/n)? ')
+    next_insert = input('\nDo you want to insert another (y/n)? ')
     if next_insert.lower() not in ['y', 'yes']:
         get_feeds = False
 
