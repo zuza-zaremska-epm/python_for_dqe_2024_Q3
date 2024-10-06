@@ -132,7 +132,7 @@ class Input:
 
         for row in feed.split(';'):
             row = row.strip(whitespace)
-            key = row[:row.find(':')]
+            key = row[:row.find(':')].lower()
             value = row[(row.find("'")+1):-1]
             input_collection[key] = value
 
@@ -148,8 +148,8 @@ class Input:
         with open(self.current_path, 'r', encoding='utf-8') as file:
             feeds = file.read().split('<next_feed>')
             for feed in feeds:
-                input_param = self.create_input_collection(feed)
-                self.input_data[filename].append(input_param)
+                feed_params = self.create_input_collection(feed)
+                self.input_data[filename].append(feed_params)
 
         self.delete_input_file()
 
