@@ -103,7 +103,6 @@ class Input:
         """
         user_path = input('Enter path to the txt file with the input: ').lower()
         if user_path:
-            # TODO: Handle invalid path
             self.input_files_paths.append(user_path)
         else:
             self.get_paths_from_default_directory()
@@ -145,13 +144,16 @@ class Input:
         """
         filename = self.current_path.split('/')[-1]
         self.input_data[filename] = []
-        with open(self.current_path, 'r', encoding='utf-8') as file:
-            feeds = file.read().split('<next_feed>')
-            for feed in feeds:
-                feed_params = self.create_input_collection(feed)
-                self.input_data[filename].append(feed_params)
+        try:
+            with open(self.current_path, 'r', encoding='utf-8') as file:
+                feeds = file.read().split('<next_feed>')
+                for feed in feeds:
+                    feed_params = self.create_input_collection(feed)
+                    self.input_data[filename].append(feed_params)
 
-        self.delete_input_file()
+            self.delete_input_file()
+        except FileNotFoundError as e:
+            print(e)
 
     def get_input_from_files(self):
         """
