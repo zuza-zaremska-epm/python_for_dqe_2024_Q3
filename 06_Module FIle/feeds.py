@@ -83,18 +83,43 @@ class Journal(Feed):
 class Input:
     default_path = 'input/'
 
-    def __init__(self, path=''):
-        self.path = path if path else Input.default_path
-        self.input = []
-        if self.path == Input.default_path:
-            self.input_files = [file for file in os.listdir(self.path) if file.endswith('.txt')]
+    def __init__(self):
+        self.current_path = None
+        self.input_files_paths = []
+        self.input_data = {}
+
+    def get_paths_from_default_directory(self):
+        """
+        Save paths to the files in the default directory
+        in the input_files.
+        """
+        self.input_files_paths = [f"{Input.default_path}{file}" for file in
+                                  os.listdir(Input.default_path) if file.endswith('.txt')]
+
+    def get_path_from_user(self):
+        """
+        Get path to the input file from the user. If not provided,
+        read from the default directory.
+        """
+        user_path = input('Enter path to the txt file with the input: ').lower()
+        if user_path:
+            # TODO: Handle invalid path
+            self.input_files_paths.append(user_path)
+        else:
+            self.get_paths_from_default_directory()
 
     def change_path(self, new_path):
-        self.path = Input.default_path + new_path
+        """
+        Update path variable for the new file.
+        :param new_path: path to the new file
+        """
+        print(f'Changed "{self.current_path}" path to "{new_path}".')
+        self.current_path = new_path
 
     def delete_input_file(self):
-        """Removes current file with input data."""
-        os.remove(self.path)
+        """Remove file from the current path."""
+        os.remove(self.current_path)
+        print(f'Removed input file: {self.current_path}')
 
     @staticmethod
     def create_input_collection(feed: str) -> dict:
@@ -108,29 +133,31 @@ class Input:
         for row in feed.split(';'):
             row = row.strip(whitespace)
             key = row[:row.find(':')]
-            value = row[row.find("'"):-1]
+            value = row[(row.find("'")+1):-1]
             input_collection[key] = value
 
         return input_collection
 
-    def read_input_parameters(self):
+    def read_feed_input_from_current_path(self):
         """
         Read all feeds data from the file currently specified in the
-        path attribute. Remove file after reading data.
+        current_path attribute. Remove file after reading data.
         """
-        with open(self.path, 'r', encoding='utf-8') as file:
+        filename = self.current_path.split('/')[-1]
+        self.input_data[filename] = []
+        with open(self.current_path, 'r', encoding='utf-8') as file:
             feeds = file.read().split('<next_feed>')
             for feed in feeds:
                 input_param = self.create_input_collection(feed)
-                self.input.append(input_param)
+                self.input_data[filename].append(input_param)
 
         self.delete_input_file()
 
-    def get_input_from_all_files(self):
+    def get_input_from_files(self):
         """
-        Scans all available files in the default directory, retrieve
+        Scans all saved files paths from input_files attribute, retrieve
         input data and deletes the file.
         """
-        for path in self.input_files:
-            self.change_path(path)
-            self.read_input_parameters()
+        for file_path in self.input_files_paths:
+            self.change_path(file_path)
+            self.read_feed_input_from_current_path()
