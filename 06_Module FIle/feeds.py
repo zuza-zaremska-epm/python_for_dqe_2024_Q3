@@ -47,9 +47,9 @@ class News(Feed):
 
 
 class PrivateAd(Feed):
-    def __init__(self, text, exp_date):
+    def __init__(self, text: str, exp_date: str):
         super().__init__(text)
-        self.exp_date = exp_date
+        self.exp_date = pendulum.parse(exp_date, strict=False).date()
         if not text:
             self.get_data_from_user()
 

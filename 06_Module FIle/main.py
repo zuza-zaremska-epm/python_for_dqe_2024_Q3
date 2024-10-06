@@ -23,6 +23,7 @@ def create_feed_by_category(input_details: dict):
         elif category in ['private ad', 'private', 'ad', 'priv']:
             text = input_details.get('text')
             exp_date = input_details.get('exp_date')
+            print(exp_date)
             feed = PrivateAd(text, exp_date)
         else:
             text = input_details.get('text')
