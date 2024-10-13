@@ -1,12 +1,14 @@
+import csv
 import pendulum
 import os
 
 from abc import ABC, abstractmethod
-from string import whitespace
+from collections import Counter
+from string import whitespace, punctuation, digits
 
 
 class Feed(ABC):
-    file_path = 'output/Feed.txt'
+    feed_file_path = 'output/Feed.txt'
 
     def __init__(self, text):
         self.text = text
@@ -17,8 +19,8 @@ class Feed(ABC):
     @classmethod
     def create_feed_file(cls):
         """If the file doesn't exist creates txt file to save new feeds."""
-        if os.path.isfile(cls.file_path) is False:
-            with open(cls.file_path, 'w', encoding='utf-8') as file:
+        if os.path.isfile(cls.feed_file_path) is False:
+            with open(cls.feed_file_path, 'w', encoding='utf-8') as file:
                 file.write('NEWS FEED\n')
 
     @abstractmethod
@@ -34,7 +36,7 @@ class Feed(ABC):
     def save_feed(self):
         """Saves created feed in the txt file."""
         self.create_feed()
-        with open(Feed.file_path, 'a', encoding='utf-8') as file:
+        with open(Feed.feed_file_path, 'a', encoding='utf-8') as file:
             file.write(self.feed + '\n')
 
     def normalize_text(self):
@@ -194,6 +196,47 @@ class Input:
         Scans all saved files paths from input_files attribute, retrieve
         input data and deletes the file.
         """
-        for file_path in self.input_files_paths:
-            self.change_path(file_path)
+        for feed_file_path in self.input_files_paths:
+            self.change_path(feed_file_path)
             self.read_feed_input_from_current_path()
+
+
+class Output:
+    target_dir = 'output/'
+
+    def __init__(self):
+        self.text = None
+        self.words = []
+
+    def read_text(self, path_to_file: str):
+        """
+        Reads the content of the text file from given path.
+        :param path_to_file: path to the text file
+        """
+        with open(path_to_file, encoding='utf-8') as file:
+            self.text = file.read()
+
+    def extract_words_from_text(self):
+        """Extracts from the text all words."""
+        chars_to_remove = (punctuation + digits + whitespace).replace(' ', '')
+        translator = str.maketrans('', '', chars_to_remove)
+
+        # Remove from the text special chars and digits.
+        cleaned_text = (self.text.translate(translator)).lower()
+        self.words = [word for word in cleaned_text.split(' ')]
+        self.words.sort()
+
+    def generate_word_count_file(self):
+        """Creates CSV file with list of words and number of occurrences."""
+        words_collection = Counter(self.words)
+        print(words_collection)
+
+        with open(
+                file=f'{Output.target_dir}word_count.csv',
+                mode='w',
+                encoding='utf-8',
+                newline=''
+        ) as file:
+            file_writer = csv.writer(file)
+            for word, num_of_occurrence in words_collection.items():
+                file_writer.writerow(([word, num_of_occurrence]))
