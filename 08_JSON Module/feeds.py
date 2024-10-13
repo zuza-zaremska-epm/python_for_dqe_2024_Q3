@@ -1,4 +1,5 @@
 import csv
+import json
 import pendulum
 import os
 
@@ -220,7 +221,24 @@ class InputText(Input):
 class InputJson(Input):
     def __init__(self):
         super().__init__()
-        self.file_extension = '.txt'
+        self.file_extension = '.json'
+
+    def read_feed_input_from_current_path(self):
+        """
+        Read all feeds data from the file currently specified in the
+        current_path attribute. Remove file after reading data.
+        """
+        filename = self.current_path.split('/')[-1]
+        self.input_data[filename] = []
+        try:
+            with open(self.current_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                for feed_params in data['feeds']:
+                    self.input_data[filename].append(feed_params)
+
+            self.delete_input_file()
+        except FileNotFoundError as e:
+            print(e)
 
 
 class Output:

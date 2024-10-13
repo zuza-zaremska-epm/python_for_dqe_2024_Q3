@@ -67,7 +67,7 @@ while get_feeds:
             inputs.append(input_instance)
         else:
             # Get data from the input dict for all input types.
-            for input_instance in [InputText()]:#, InputJson()]:
+            for input_instance in [InputText(), InputJson()]:
                 input_instance.get_paths_from_default_directory()
                 inputs.append(input_instance)
 
