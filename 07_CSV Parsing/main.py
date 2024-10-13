@@ -61,8 +61,12 @@ while get_feeds:
     if next_insert.lower() not in ['y', 'yes']:
         get_feeds = False
 
-print('\nFile has been saved.')
+print('\nFeed file has been saved.')
+
 output = Output()
 output.read_text(Feed.feed_file_path)
+
 output.extract_words_from_text()
 output.generate_word_count_file()
+
+output.generate_letter_count_file()

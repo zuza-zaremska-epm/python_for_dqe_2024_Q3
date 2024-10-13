@@ -206,7 +206,7 @@ class Output:
 
     def __init__(self):
         self.text = None
-        self.words = []
+        self.words_list = []
 
     def read_text(self, path_to_file: str):
         """
@@ -223,12 +223,12 @@ class Output:
 
         # Remove from the text special chars and digits.
         cleaned_lowered_text = (self.text.translate(translator)).lower()
-        self.words = [word for word in cleaned_lowered_text.split(' ') if word.isalpha()]
-        self.words.sort()
+        self.words_list = [word for word in cleaned_lowered_text.split(' ') if word.isalpha()]
+        self.words_list.sort()
 
     def generate_word_count_file(self):
         """Creates CSV file with list of words and number of occurrences."""
-        words_collection = Counter(self.words)
+        words_collection = Counter(self.words_list)
         with open(
                 file=f'{Output.target_dir}word_count.csv',
                 mode='w',
@@ -238,3 +238,52 @@ class Output:
             file_writer = csv.writer(file)
             for word, num_of_occurrence in words_collection.items():
                 file_writer.writerow(([word, num_of_occurrence]))
+
+        print('Created word_count.csv file.')
+
+    def generate_letter_count_file(self):
+        """Creates CSV file with list of letters and their statistics."""
+        letters_collection = {}
+
+        letters_count = {
+            letter: count for letter, count
+            in Counter(self.text).items()
+            if letter.isalpha()
+        }
+
+        for letter, count in letters_count.items():
+            key = letter.lower()
+            if not letters_collection.get(key):
+                letters_collection[key] = {
+                    'letter': key,
+                    'count_all': 0,
+                    'count_uppercase': 0
+                }
+
+            letters_collection[key]['count_all'] += count
+            if letter.isupper():
+                letters_collection[key]['count_uppercase'] += count
+
+        # Count percentage.
+        for letter, details in letters_collection.items():
+            upper_count = details['count_uppercase']
+            total_count = details['count_all']
+
+            perc = round((upper_count*100/total_count), 2)
+            letters_collection[letter]['percentage'] = perc
+
+        # Sort and prepare data for the file.
+        letters_collection = dict(sorted(letters_collection.items()))
+        data = [details for letter, details in letters_collection.items()]
+        with open(
+                file=f'{Output.target_dir}letter_count.csv',
+                mode='w',
+                encoding='utf-8',
+                newline=''
+        ) as file:
+            headers = data[0].keys()
+            file_writer = csv.DictWriter(file, fieldnames=headers)
+            file_writer.writeheader()
+            file_writer.writerows(data)
+
+        print('Created letter_count.csv file.')
