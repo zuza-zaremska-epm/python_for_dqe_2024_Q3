@@ -123,6 +123,7 @@ class Input:
         self.current_path = None
         self.input_files_paths = []
         self.input_data = {}
+        self.file_extension = None
 
     def get_paths_from_default_directory(self):
         """
@@ -130,14 +131,15 @@ class Input:
         in the input_files.
         """
         self.input_files_paths = [f"{Input.default_path}{file}" for file in
-                                  os.listdir(Input.default_path) if file.endswith('.txt')]
+                                  os.listdir(Input.default_path)
+                                  if file.endswith(self.file_extension)]
 
     def get_path_from_user(self):
         """
         Get path to the input file from the user. If not provided,
         read from the default directory.
         """
-        user_path = input('Enter path to the txt file with the input: ').lower()
+        user_path = input(f'Enter path to the {self.file_extension} file with the input: ').lower()
         if user_path:
             self.input_files_paths.append(user_path)
         else:
