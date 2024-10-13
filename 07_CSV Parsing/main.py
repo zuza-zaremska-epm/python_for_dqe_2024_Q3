@@ -3,7 +3,7 @@
 # 1.word-count (all words are preprocessed in lowercase)
 # 2.letter, count_all, count_uppercase, percentage (add header, spacecharacters are not included)
 # CSVs should be recreated each time new record added.
-from feeds import Input, Feed, News, PrivateAd, Journal
+from feeds import Input, Output, Feed, News, PrivateAd, Journal
 
 
 def create_feed_by_category(input_details: dict):
@@ -62,3 +62,7 @@ while get_feeds:
         get_feeds = False
 
 print('\nFile has been saved.')
+output = Output()
+output.read_text(Feed.feed_file_path)
+output.extract_words_from_text()
+output.generate_word_count_file()
