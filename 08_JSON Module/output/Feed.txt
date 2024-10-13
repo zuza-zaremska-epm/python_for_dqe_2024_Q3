@@ -1,8 +1,30 @@
 NEWS FEED
 
 --- NEWS ---
+This is text from the manual data input for the news type.
+Katowice, 2024-10-13 20:24
+
+--- JOURNAL ---
+This is the text from manual journal update.
+I feel unsecure today.
+Ola, 2024-10-13 20:25
+
+--- NEWS ---
+This is the news text from input json file 5.
+London, 2024-10-13 20:25
+
+--- PRIVATE AD ---
+Some private ad from input json file 5.
+Actual until: 2024-11-29 (47 days left)
+
+--- JOURNAL ---
+This is journal text from input json file 5.
+I feel Adorable today.
+Jenny, 2024-10-13 20:25
+
+--- NEWS ---
 This is the news text from input txt file 1.
-Kraków, 2024-10-06 18:20
+Kraków, 2024-10-13 20:25
 
 --- PRIVATE AD ---
  This iz your homework, copy these text to variable.
@@ -18,39 +40,48 @@ Kraków, 2024-10-06 18:20
 
 
  Last iz to calculate number of whitespace characters in this tex. Carefull, not only spaces, but all whitespaces. I got 87.
-Actual until: 2024-10-31 (25 days left)
+Actual until: 2024-10-31 (18 days left)
 
 --- JOURNAL ---
 This is my journal text from input txt file 1.
 I feel happy today.
-Susan, 2024-10-06 18:20
+Susan, 2024-10-13 20:25
 
 --- NEWS ---
 This is the news text from input txt file 2.
-Gdańsk, 2024-10-06 18:20
+Gdańsk, 2024-10-13 20:25
 
 --- PRIVATE AD ---
 This is the private advertisement text from input txt file 2.
-Actual until: 2024-10-26 (20 days left)
+Actual until: 2024-10-26 (13 days left)
 
 --- JOURNAL ---
 This is my journal text from input txt file 2.
 I feel unhappy today.
-Jenny, 2024-10-06 18:20
+Jenny, 2024-10-13 20:25
+
+--- NEWS ---
+This is the news text from input json file 4.
+Tomaszów Mazowiecki, 2024-10-13 20:25
 
 --- PRIVATE AD ---
-This is manually entered text to some ad. Thank you for reading this. :)
-Actual until: 2024-10-18 (12 days left)
+Some private ad from input json file 4.
+Actual until: 2024-12-15 (63 days left)
+
+--- JOURNAL ---
+This is journal text from input json file 4.
+I feel Confused today.
+Stephan, 2024-10-13 20:25
 
 --- NEWS ---
 This is the news text from input txt file 3 about łódź.
-Łódź, 2024-10-06 18:21
+Łódź, 2024-10-13 20:26
 
 --- PRIVATE AD ---
 This is the private advertisement text from input txt file 3.
-Actual until: 2024-12-31 (86 days left)
+Actual until: 2024-12-31 (79 days left)
 
 --- JOURNAL ---
 This is my journal text from input txt file 3.
 I feel happy today.
-Susan, 2024-10-06 18:21
+Susan, 2024-10-13 20:26
