@@ -222,15 +222,13 @@ class Output:
         translator = str.maketrans('', '', chars_to_remove)
 
         # Remove from the text special chars and digits.
-        cleaned_text = (self.text.translate(translator)).lower()
-        self.words = [word for word in cleaned_text.split(' ')]
+        cleaned_lowered_text = (self.text.translate(translator)).lower()
+        self.words = [word for word in cleaned_lowered_text.split(' ') if word.isalpha()]
         self.words.sort()
 
     def generate_word_count_file(self):
         """Creates CSV file with list of words and number of occurrences."""
         words_collection = Counter(self.words)
-        print(words_collection)
-
         with open(
                 file=f'{Output.target_dir}word_count.csv',
                 mode='w',
