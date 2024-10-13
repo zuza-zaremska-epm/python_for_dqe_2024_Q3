@@ -1,0 +1,56 @@
+NEWS FEED
+
+--- NEWS ---
+This is the news text from input txt file 1.
+Kraków, 2024-10-06 18:20
+
+--- PRIVATE AD ---
+ This iz your homework, copy these text to variable.
+
+
+
+ You need to normalize it from letter cases point of view. Also, create one more sentence with last words of each existing sentence and add it to the end of this paragraph.
+
+
+
+ It iz misspelling here. Fix“iz” with correct “is”, but only when it iz a mistake.
+
+
+
+ Last iz to calculate number of whitespace characters in this tex. Carefull, not only spaces, but all whitespaces. I got 87.
+Actual until: 2024-10-31 (25 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 1.
+I feel happy today.
+Susan, 2024-10-06 18:20
+
+--- NEWS ---
+This is the news text from input txt file 2.
+Gdańsk, 2024-10-06 18:20
+
+--- PRIVATE AD ---
+This is the private advertisement text from input txt file 2.
+Actual until: 2024-10-26 (20 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 2.
+I feel unhappy today.
+Jenny, 2024-10-06 18:20
+
+--- PRIVATE AD ---
+This is manually entered text to some ad. Thank you for reading this. :)
+Actual until: 2024-10-18 (12 days left)
+
+--- NEWS ---
+This is the news text from input txt file 3 about łódź.
+Łódź, 2024-10-06 18:21
+
+--- PRIVATE AD ---
+This is the private advertisement text from input txt file 3.
+Actual until: 2024-12-31 (86 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 3.
+I feel happy today.
+Susan, 2024-10-06 18:21
