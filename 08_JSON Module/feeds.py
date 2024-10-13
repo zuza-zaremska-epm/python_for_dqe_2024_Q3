@@ -116,7 +116,7 @@ class Journal(Feed):
         print(self.feed)
 
 
-class Input:
+class Input(ABC):
     default_path = 'input/'
 
     def __init__(self):
@@ -158,6 +158,29 @@ class Input:
         os.remove(self.current_path)
         print(f'Removed input file: {self.current_path}')
 
+    @abstractmethod
+    def read_feed_input_from_current_path(self):
+        """
+        Read all feeds data from the file currently specified in the
+        current_path attribute. Remove file after reading data.
+        """
+        pass
+
+    def get_input_from_files(self):
+        """
+        Scans all saved files paths from input_files attribute, retrieve
+        input data and deletes the file.
+        """
+        for feed_file_path in self.input_files_paths:
+            self.change_path(feed_file_path)
+            self.read_feed_input_from_current_path()
+
+
+class InputText(Input):
+    def __init__(self):
+        super().__init__()
+        self.file_extension = '.txt'
+
     @staticmethod
     def create_input_collection(feed: str) -> dict:
         """
@@ -192,15 +215,6 @@ class Input:
             self.delete_input_file()
         except FileNotFoundError as e:
             print(e)
-
-    def get_input_from_files(self):
-        """
-        Scans all saved files paths from input_files attribute, retrieve
-        input data and deletes the file.
-        """
-        for feed_file_path in self.input_files_paths:
-            self.change_path(feed_file_path)
-            self.read_feed_input_from_current_path()
 
 
 class Output:
