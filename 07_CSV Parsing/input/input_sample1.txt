@@ -11,7 +11,7 @@ text: ' tHis iz your homeWork, copy these Text to variable.
 
 
 
- it iZ misspeLLing here. fix“iZ” with correct “is”, but ONLY when it Iz a mistAKE.
+ it iZ misspeLLing here. fix"iZ" with correct "is", but ONLY when it Iz a mistAKE.
 
 
 
