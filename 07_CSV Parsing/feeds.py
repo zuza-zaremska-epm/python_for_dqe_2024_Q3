@@ -6,7 +6,7 @@ from string import whitespace
 
 
 class Feed(ABC):
-    file_path = 'Feed.txt'
+    file_path = 'output/Feed.txt'
 
     def __init__(self, text):
         self.text = text

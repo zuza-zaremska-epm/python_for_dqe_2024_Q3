@@ -1,8 +1,8 @@
-# Expand previous Homework 5 with additional class, which allow to provide records by text file:
-# 1.Define your input format (one or many records)
-# 2.Default folder or user provided file path
-# 3.Remove file if it was successfully processed
-# 4.Apply case normalization functionality form Homework 3/4
+# Calculate number of words and letters from previous Homeworks 5/6 output test file.
+# Create two csv:
+# 1.word-count (all words are preprocessed in lowercase)
+# 2.letter, count_all, count_uppercase, percentage (add header, spacecharacters are not included)
+# CSVs should be recreated each time new record added.
 from feeds import Input, Feed, News, PrivateAd, Journal
 
 
