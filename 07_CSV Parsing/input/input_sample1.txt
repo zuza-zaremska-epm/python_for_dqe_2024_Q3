@@ -1,0 +1,24 @@
+category: 'news';
+text: 'This is the news text from input txt file 1.';
+city: 'Kraków';
+<next_feed>
+category: 'private ad';
+text: ' tHis iz your homeWork, copy these Text to variable.
+
+
+
+ You NEED TO normalize it fROM letter CASEs point oF View. also, create one MORE senTENCE witH LAST WoRDS of each existING SENtence and add it to the END OF this Paragraph.
+
+
+
+ it iZ misspeLLing here. fix"iZ" with correct "is", but ONLY when it Iz a mistAKE.
+
+
+
+ last iz TO calculate nuMber OF Whitespace characteRS in this Tex. caREFULL, not only Spaces, but ALL whitespaces. I got 87.';
+exp_date: '31-10-2024';
+<next_feed>
+category: 'journal';
+text: 'This is my journal text from input txt file 1.';
+name: 'Susan';
+mood: 'happy';
