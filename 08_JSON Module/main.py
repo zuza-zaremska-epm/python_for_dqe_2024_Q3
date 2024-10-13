@@ -1,9 +1,9 @@
-# Calculate number of words and letters from previous Homeworks 5/6 output test file.
-# Create two csv:
-# 1.word-count (all words are preprocessed in lowercase)
-# 2.letter, count_all, count_uppercase, percentage (add header, spacecharacters are not included)
-# CSVs should be recreated each time new record added.
-from feeds import Input, Output, Feed, News, PrivateAd, Journal
+# Expand previous Homework 5/6/7 with additional class, which allow to provide records by JSON file:
+# 1.Define your input format (one or many records)
+# 2.Default folder or user provided file path
+# 3.Remove file if it was successfully processed
+
+from feeds import InputText, Output, Feed, News, PrivateAd, Journal
 
 
 def create_feed_by_category(input_details: dict):
@@ -41,7 +41,7 @@ while get_feeds:
     # Get information about data ingestion type.
     ingestion = input('\nDo you want to enter data manually/by file? (m/f) ').lower()
     if ingestion in ['f', 'by file', 'file', 'files']:
-        file_input = Input()
+        file_input = InputText()
         custom_path = input('\nDo you want to provide path to the file? (y/n) ')
         if custom_path.lower() in ['y', 'yes']:
             file_input.get_path_from_user()
