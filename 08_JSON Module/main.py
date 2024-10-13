@@ -46,6 +46,7 @@ def adjust_input_to_user_path() -> Input:
     elif file_extension == 'json':
         input_type = InputJson()
     else:
+        # Invalid file path will be ignored.
         input_type = InputText()
 
     input_type.get_user_path(user_path)
@@ -87,10 +88,10 @@ while get_feeds:
 
 print('\nFeed file has been saved.')
 
-# output = Output()
-# output.read_text(Feed.feed_file_path)
-#
-# output.extract_words_from_text()
-# output.generate_word_count_file()
-#
-# output.generate_letter_count_file()
+output = Output()
+output.read_text(Feed.feed_file_path)
+
+output.extract_words_from_text()
+output.generate_word_count_file()
+
+output.generate_letter_count_file()
