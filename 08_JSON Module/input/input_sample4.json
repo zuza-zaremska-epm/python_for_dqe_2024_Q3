@@ -1,0 +1,18 @@
+{
+  "1": {
+    "category": "news",
+    "text": "This is the news text from input JSON file 4.",
+    "city": "Tomaszów Mazowiecki"
+  },
+  "2": {
+    "category": "private ad",
+    "text": "SoMe private AD from input JSON file 4.",
+    "exp_date": "2024-12-15"
+  },
+  "3": {
+    "category": "journal",
+    "text": "This is Journal text from input JSON file 4.",
+    "name": "Stephan",
+    "mood": "Confused"
+  }
+}
