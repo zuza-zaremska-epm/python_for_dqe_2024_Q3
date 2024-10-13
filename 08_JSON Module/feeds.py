@@ -123,7 +123,7 @@ class Input(ABC):
         self.current_path = None
         self.input_files_paths = []
         self.input_data = {}
-        self.file_extension = None
+        self.file_extension = ''
 
     def get_paths_from_default_directory(self):
         """
@@ -134,16 +134,16 @@ class Input(ABC):
                                   os.listdir(Input.default_path)
                                   if file.endswith(self.file_extension)]
 
-    def get_path_from_user(self):
+    def get_user_path(self, user_path: str):
         """
-        Get path to the input file from the user. If not provided,
-        read from the default directory.
+        Adds valid path from the user to the input files list.
+        :param user_path: path to the file provided by the user
         """
-        user_path = input(f'Enter path to the {self.file_extension} file with the input: ').lower()
         if user_path:
-            self.input_files_paths.append(user_path)
-        else:
-            self.get_paths_from_default_directory()
+            if user_path.endswith(self.file_extension):
+                self.input_files_paths.append(user_path.lower())
+            else:
+                print(f'Unknown file format: {user_path}')
 
     def change_path(self, new_path):
         """
@@ -215,6 +215,12 @@ class InputText(Input):
             self.delete_input_file()
         except FileNotFoundError as e:
             print(e)
+
+
+class InputJson(Input):
+    def __init__(self):
+        super().__init__()
+        self.file_extension = '.txt'
 
 
 class Output:

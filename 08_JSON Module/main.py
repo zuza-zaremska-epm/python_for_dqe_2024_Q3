@@ -2,8 +2,8 @@
 # 1.Define your input format (one or many records)
 # 2.Default folder or user provided file path
 # 3.Remove file if it was successfully processed
-
-from feeds import InputText, Output, Feed, News, PrivateAd, Journal
+from feeds import Input, InputText, InputJson, Output
+from feeds import Feed, News, PrivateAd, Journal
 
 
 def create_feed_by_category(input_details: dict):
@@ -33,6 +33,25 @@ def create_feed_by_category(input_details: dict):
         feed.save_feed()
 
 
+def adjust_input_to_user_path() -> Input:
+    """
+    Get path to the custom file from the user and adjust input type to the
+    given path.
+    :return: adjusted input type
+    """
+    user_path = input('Provide path to the file: ').lower()
+    file_extension = user_path.split('.')[-1]
+    if file_extension == 'txt':
+        input_type = InputText()
+    elif file_extension == 'json':
+        input_type = InputJson()
+    else:
+        input_type = InputText()
+
+    input_type.get_user_path(user_path)
+    return input_type
+
+
 # Create new feed file if not exists.
 Feed.create_feed_file()
 get_feeds = True
@@ -41,17 +60,22 @@ while get_feeds:
     # Get information about data ingestion type.
     ingestion = input('\nDo you want to enter data manually/by file? (m/f) ').lower()
     if ingestion in ['f', 'by file', 'file', 'files']:
-        file_input = InputText()
+        inputs = []
         custom_path = input('\nDo you want to provide path to the file? (y/n) ')
         if custom_path.lower() in ['y', 'yes']:
-            file_input.get_path_from_user()
+            input_instance = adjust_input_to_user_path()
+            inputs.append(input_instance)
         else:
-            file_input.get_paths_from_default_directory()
+            # Get data from the input dict for all input types.
+            for input_instance in [InputText()]:#, InputJson()]:
+                input_instance.get_paths_from_default_directory()
+                inputs.append(input_instance)
 
-        file_input.get_input_from_files()
-        for filename, feeds_details in file_input.input_data.items():
-            for feed_params in feeds_details:
-                create_feed_by_category(feed_params)
+        for input_instance in inputs:
+            input_instance.get_input_from_files()
+            for filename, feeds_details in input_instance.input_data.items():
+                for feed_params in feeds_details:
+                    create_feed_by_category(feed_params)
     else:
         user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
         feed_params = {'category': user_category}
@@ -63,10 +87,10 @@ while get_feeds:
 
 print('\nFeed file has been saved.')
 
-output = Output()
-output.read_text(Feed.feed_file_path)
-
-output.extract_words_from_text()
-output.generate_word_count_file()
-
-output.generate_letter_count_file()
+# output = Output()
+# output.read_text(Feed.feed_file_path)
+#
+# output.extract_words_from_text()
+# output.generate_word_count_file()
+#
+# output.generate_letter_count_file()
