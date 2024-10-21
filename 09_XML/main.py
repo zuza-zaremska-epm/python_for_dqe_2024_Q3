@@ -45,7 +45,7 @@ def adjust_input_to_user_path() -> Input:
         input_type = InputText()
     elif file_extension == 'json':
         input_type = InputJson()
-    elif file_extension == '.xml':
+    elif file_extension == 'xml':
         input_type = InputXml()
     else:
         # Invalid file path will be ignored.
