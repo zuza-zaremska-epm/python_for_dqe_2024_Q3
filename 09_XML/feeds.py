@@ -2,6 +2,7 @@ import csv
 import json
 import pendulum
 import os
+import xml.etree.ElementTree as ET
 
 from abc import ABC, abstractmethod
 from collections import Counter
@@ -234,6 +235,31 @@ class InputJson(Input):
             with open(self.current_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 for feed_params in data['feeds']:
+                    self.input_data[filename].append(feed_params)
+
+            self.delete_input_file()
+        except FileNotFoundError as e:
+            print(e)
+
+
+class InputXml(Input):
+    def __init__(self):
+        super().__init__()
+        self.file_extension = '.xml'
+
+    def read_feed_input_from_current_path(self):
+        """
+        Read all feeds data from the file currently specified in the
+        current_path attribute. Remove file after reading data.
+        """
+        filename = self.current_path.split('/')[-1]
+        self.input_data[filename] = []
+        try:
+            with open(self.current_path, 'r', encoding='utf-8') as file:
+                root = ET.parse(file).getroot()
+                for feed in root.findall('feed'):
+                    feed_params = {child.tag: child.text for child in feed}
+
                     self.input_data[filename].append(feed_params)
 
             self.delete_input_file()
