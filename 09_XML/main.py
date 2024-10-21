@@ -2,7 +2,7 @@
 # 1.Define your input format (one or many records)
 # 2.Default folder or user provided file path
 # 3.Remove file if it was successfully processed
-from feeds import Input, InputText, InputJson, Output
+from feeds import Input, InputText, InputJson, InputXml, Output
 from feeds import Feed, News, PrivateAd, Journal
 
 
@@ -45,6 +45,8 @@ def adjust_input_to_user_path() -> Input:
         input_type = InputText()
     elif file_extension == 'json':
         input_type = InputJson()
+    elif file_extension == '.xml':
+        input_type = InputXml()
     else:
         # Invalid file path will be ignored.
         input_type = InputText()
