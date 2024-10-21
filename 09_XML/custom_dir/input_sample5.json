@@ -1,0 +1,22 @@
+{
+  "creation_date": "2024-10-10",
+  "created_by": "Jenny Anderson",
+  "feeds": [
+    {
+    "category": "news",
+    "text": "This is the news text from input JSON file 5.",
+    "city": "London"
+    },
+    {
+      "category": "private ad",
+      "text": "SoMe private AD from input JSON file 5.",
+      "exp_date": "2024-11-29"
+    },
+    {
+      "category": "journal",
+      "text": "This is Journal text from input JSON file 5.",
+      "name": "Jenny",
+      "mood": "Adorable"
+    }
+  ]
+}
