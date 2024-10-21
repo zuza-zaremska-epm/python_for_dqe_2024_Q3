@@ -2,7 +2,7 @@
 # 1.Different types of records require different data tables
 # 2.New record creates new row in data table
 # 3.Implement “no duplicate” check.
-from feeds import Input, InputText, InputJson, InputXml, Output
+from feeds import Input, InputText, InputJson, InputXml, Output, DatabaseManager
 from feeds import Feed, News, PrivateAd, Journal
 
 
@@ -55,6 +55,31 @@ def adjust_input_to_user_path() -> Input:
     return input_type
 
 
+DB_TABLES_CONFIG = {
+    'news': {
+        'news_id': 'INT',
+        'news_text': 'TEXT',
+        'news_city': 'TEXT'
+    },
+    'private_ads': {
+        'private_ad_id': 'INT',
+        'private_ad_text': 'TEXT',
+        'private_ad_exp_date': 'TEXT'
+    },
+    'journals': {
+        'journal_id': 'INT',
+        'journal_text': 'TEXT',
+        'journal_author_name': 'TEXT',
+        'journal_author_mood': 'TEXT'
+    }
+}
+
+# Connect to database.
+db = DatabaseManager(db_name='feeds')
+db.create_database()
+for table_name, columns_details in DB_TABLES_CONFIG.items():
+    db.create_table(table_name, columns_details)
+
 # Create new feed file if not exists.
 Feed.create_feed_file()
 get_feeds = True
@@ -79,10 +104,12 @@ while get_feeds:
             for filename, feeds_details in input_instance.input_data.items():
                 for feed_params in feeds_details:
                     create_feed_by_category(feed_params)
+                    db.insert_data(feed_params)
     else:
         user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
         feed_params = {'category': user_category}
         create_feed_by_category(feed_params)
+        db.insert_data(feed_params)
 
     next_insert = input('\nDo you want to insert another (y/n)? ')
     if next_insert.lower() not in ['y', 'yes']:

@@ -1,12 +1,102 @@
 import csv
 import json
 import pendulum
+import pyodbc
 import os
 import xml.etree.ElementTree as ET
 
 from abc import ABC, abstractmethod
 from collections import Counter
 from string import whitespace, punctuation, digits
+
+
+class DatabaseManager:
+    """Perform actions on sqlite database."""
+    def __init__(self, db_name: str):
+        self.db_name = db_name
+        with pyodbc.connect("Driver=SQLite3 ODBC Driver;"f"Database={db_name}.db", autocommit=True) as db_conn:
+            self.cursor = db_conn.cursor()
+
+    def create_database(self):
+        """Create new database with defined name if not exists."""
+        create_db_query = f"""
+            IF NOT EXISTS (
+                SELECT name
+                FROM sys.databases
+                WHERE name = '{self.db_name}'
+            )
+            BEGIN
+                CREATE DATABASE {self.db_name}
+            END;"""
+        self.cursor.execute(create_db_query)
+        print(f'Database "{self.db_name}" created successfully.')
+
+    def create_table(self, table_name: str, table_configuration: dict):
+        """
+        Creates table with given configuration.
+        :param table_name: name of the table
+        :param table_configuration: columns names with their datatype
+        """
+        columns_details = [f'{column_name} {datatype}' for column_name, datatype in table_configuration.items()]
+        columns_config = ', '.join(columns_details)
+        self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns_config});')
+
+    def check_for_duplicates(self, table_name: str = None, conditions: dict = None):
+        """
+        Checks if in the table data already exists.
+        :param table_name: name of the table
+        :param conditions: collection of record details
+        """
+        if conditions:
+            conditions = [f"{column_name} = '{value}'" for column_name, value in conditions.items()]
+            self.cursor.execute(
+                f"""SELECT COUNT(*)
+                FROM {table_name}
+                WHERE {" AND ".join(conditions)};"""
+            )
+
+            result = self.cursor.fetchone()[0]
+            if result == 0:
+                return True
+            else:
+                print('Data already in the database.')
+                return False
+
+    def insert_data(self, input_params: dict):
+        """
+        Inserts data into matching table.
+        :param input_params: input data
+        """
+        table_name = None
+        conditions = None
+
+        category = input_params.get('category')
+        if category == 'news':
+            table_name = category
+            conditions = {
+                'news_text': input_params.get('text'),
+                'news_city': input_params.get('city')
+            }
+        elif category == 'private_ad':
+            table_name = f'{category}s'
+            conditions = {
+                'private_ad_text': input_params.get('text'),
+                'private_ad_exp_date': input_params.get('exp_date')
+            }
+        elif category == 'journal':
+            table_name = f'{category}s'
+            conditions = {
+                'journal_text': input_params.get('text'),
+                'journal_author_name': input_params.get('name'),
+                'journal_author_mood': input_params.get('mood')
+            }
+
+        if table_name:
+            if self.check_for_duplicates(table_name, conditions):
+                sql_insert = f"""
+                INSERT INTO {table_name} ({", ".join(conditions.keys())})
+                VALUES ('{"', '".join(conditions.values())}');"""
+                self.cursor.execute(sql_insert)
 
 
 class Feed(ABC):
