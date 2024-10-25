@@ -53,11 +53,11 @@ class DatabaseManager:
         """
         if conditions:
             conditions = [f"{column_name} = '{value}'" for column_name, value in conditions.items()]
-            self.cursor.execute(
-                f"""SELECT COUNT(*)
-                FROM {table_name}
-                WHERE {" AND ".join(conditions)};"""
-            )
+            sql_check = f"""
+            SELECT COUNT(*)
+            FROM {table_name}
+            WHERE {" AND ".join(conditions)};"""
+            self.cursor.execute(sql_check)
 
             result = self.cursor.fetchone()[0]
             if result == 0:
@@ -78,21 +78,21 @@ class DatabaseManager:
         if category == 'news':
             table_name = category
             conditions = {
-                'news_text': input_params.get('text'),
-                'news_city': input_params.get('city')
+                'news_text': input_params.get('text', 'Not provided'),
+                'news_city': input_params.get('city', 'Not provided')
             }
         elif category == 'private ad':
-            table_name = f'{category}s'
+            table_name = f'private_ads'
             conditions = {
-                'private_ad_text': input_params.get('text'),
-                'private_ad_exp_date': input_params.get('exp_date')
+                'private_ad_text': input_params.get('text', 'Not provided'),
+                'private_ad_exp_date': input_params.get('exp_date', 'Not provided')
             }
         elif category == 'journal':
             table_name = f'{category}s'
             conditions = {
-                'journal_text': input_params.get('text'),
-                'journal_author_name': input_params.get('name'),
-                'journal_author_mood': input_params.get('mood')
+                'journal_text': input_params.get('text', 'Not provided'),
+                'journal_author_name': input_params.get('name', 'Not provided'),
+                'journal_author_mood': input_params.get('mood',  'Not provided')
             }
 
         print(f"Table name: {table_name}")
@@ -103,7 +103,10 @@ class DatabaseManager:
                 INSERT INTO {table_name} ({", ".join(conditions.keys())})
                 VALUES ('{"', '".join(conditions.values())}');"""
                 print(sql_insert)
-                self.cursor.execute(sql_insert)
+                try:
+                    self.cursor.execute(sql_insert)
+                except pyodbc.Error as e:
+                    print(f"Error: {e}")
 
 
 class Feed(ABC):

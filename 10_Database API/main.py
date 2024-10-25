@@ -20,17 +20,22 @@ def create_feed_by_category(input_details: dict):
             text = input_details.get('text')
             city = input_details.get('city')
             feed = News(text, city)
+            input_details.update({'category': 'news', 'text': feed.text, 'city': feed.city})
         elif category in ['private ad', 'private', 'ad', 'priv']:
             text = input_details.get('text')
             exp_date = input_details.get('exp_date')
             feed = PrivateAd(text, exp_date)
+            input_details.update({'category': 'private ad', 'text': feed.text, 'exp_date': feed.exp_date})
         else:
             text = input_details.get('text')
             name = input_details.get('name')
             mood = input_details.get('mood')
             feed = Journal(text, name, mood)
+            input_details.update({'category': 'journal', 'text': feed.text, 'name': feed.name, 'mood': feed.mood})
 
         feed.save_feed()
+        print(input_details)
+        return input_details
 
 
 def adjust_input_to_user_path() -> Input:
@@ -57,17 +62,17 @@ def adjust_input_to_user_path() -> Input:
 
 DB_TABLES_CONFIG = {
     'news': {
-        'news_id': 'INT',
+        'news_id': 'INT PRIMARY KEY',
         'news_text': 'TEXT',
         'news_city': 'TEXT'
     },
     'private_ads': {
-        'private_ad_id': 'INT',
+        'private_ad_id': 'INT PRIMARY KEY',
         'private_ad_text': 'TEXT',
         'private_ad_exp_date': 'TEXT'
     },
     'journals': {
-        'journal_id': 'INT',
+        'journal_id': 'INT PRIMARY KEY',
         'journal_text': 'TEXT',
         'journal_author_name': 'TEXT',
         'journal_author_mood': 'TEXT'
@@ -102,12 +107,12 @@ while get_feeds:
             input_instance.get_input_from_files()
             for filename, feeds_details in input_instance.input_data.items():
                 for feed_params in feeds_details:
-                    create_feed_by_category(feed_params)
+                    feed_params = create_feed_by_category(feed_params)
                     db.insert_data(feed_params)
     else:
         user_category = input('What category you want to add?\n"News" | "Private ad" | "Journal": ')
         feed_params = {'category': user_category}
-        create_feed_by_category(feed_params)
+        feed_params = create_feed_by_category(feed_params)
         db.insert_data(feed_params)
 
     next_insert = input('\nDo you want to insert another (y/n)? ')
