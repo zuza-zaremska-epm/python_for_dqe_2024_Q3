@@ -14,7 +14,7 @@ from string import whitespace, punctuation, digits
 class DatabaseManager:
     """Perform actions on sqlite database."""
     def __init__(self, db_name: str, db_configuration: dict):
-        self.cursor = None
+        self.conn = None
         self.db_name = db_name
         self.db_configuration = db_configuration
         self.create_database()
@@ -26,8 +26,13 @@ class DatabaseManager:
 
     def connect_to_database(self):
         """Connect to the database."""
-        with pyodbc.connect("Driver=Devart ODBC Driver for SQLite;"f"Database={self.db_name}.db", autocommit=True) as conn:
-            self.cursor = conn.cursor()
+        self.conn = pyodbc.connect("Driver=Devart ODBC Driver for SQLite;"f"Database={self.db_name}.db", autocommit=True)
+        print(f'Connected to "{self.db_name}" database.')
+
+    def disconnect_from_database(self):
+        """Disconnect from the database."""
+        self.conn.close()
+        print(f'Disconnected from "{self.db_name}" database.')
 
     def create_database_structure(self):
         """Create database tables with the given database configuration."""
@@ -42,7 +47,11 @@ class DatabaseManager:
         """
         columns_details = [f'{column_name} {datatype}' for column_name, datatype in table_configuration.items()]
         columns_config = ', '.join(columns_details)
-        self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns_config});')
+
+        cursor = self.conn.cursor()
+        cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns_config});')
+        cursor.close()
+
         print(f'Created "{table_name}" table.')
 
     def check_for_duplicates(self, table_name: str = None, conditions: dict = None):
@@ -57,9 +66,12 @@ class DatabaseManager:
             SELECT COUNT(*)
             FROM {table_name}
             WHERE {" AND ".join(conditions)};"""
-            self.cursor.execute(sql_check)
 
-            result = self.cursor.fetchone()[0]
+            cursor = self.conn.cursor()
+            cursor.execute(sql_check)
+            result = cursor.fetchone()[0]
+            cursor.close()
+
             if result == 0:
                 return True
             else:
@@ -78,33 +90,33 @@ class DatabaseManager:
         if category == 'news':
             table_name = category
             conditions = {
-                'news_text': input_params.get('text', 'Not provided'),
-                'news_city': input_params.get('city', 'Not provided')
+                'news_text': str(input_params.get('text')),
+                'news_city': str(input_params.get('city'))
             }
         elif category == 'private ad':
             table_name = f'private_ads'
             conditions = {
-                'private_ad_text': input_params.get('text', 'Not provided'),
-                'private_ad_exp_date': input_params.get('exp_date', 'Not provided')
+                'private_ad_text': str(input_params.get('text')),
+                'private_ad_exp_date': str(input_params.get('exp_date'))
             }
         elif category == 'journal':
             table_name = f'{category}s'
             conditions = {
-                'journal_text': input_params.get('text', 'Not provided'),
-                'journal_author_name': input_params.get('name', 'Not provided'),
-                'journal_author_mood': input_params.get('mood',  'Not provided')
+                'journal_text': str(input_params.get('text')),
+                'journal_author_name': str(input_params.get('name')),
+                'journal_author_mood': str(input_params.get('mood',  'Not provided'))
             }
 
-        print(f"Table name: {table_name}")
-        print(F"Conditions: {conditions}")
         if table_name:
             if self.check_for_duplicates(table_name, conditions):
                 sql_insert = f"""
                 INSERT INTO {table_name} ({", ".join(conditions.keys())})
                 VALUES ('{"', '".join(conditions.values())}');"""
-                print(sql_insert)
+
                 try:
-                    self.cursor.execute(sql_insert)
+                    cursor = self.conn.cursor()
+                    cursor.execute(sql_insert)
+                    cursor.close()
                 except pyodbc.Error as e:
                     print(f"Error: {e}")
 

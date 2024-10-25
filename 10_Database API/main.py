@@ -119,6 +119,7 @@ while get_feeds:
     if next_insert.lower() not in ['y', 'yes']:
         get_feeds = False
 
+db.disconnect_from_database()
 print('\nFeed file has been saved.')
 
 output = Output()
