@@ -1,8 +1,9 @@
 import csv
 import json
+import os
 import pendulum
 import pyodbc
-import os
+import sqlite3
 import xml.etree.ElementTree as ET
 
 from abc import ABC, abstractmethod
@@ -12,24 +13,26 @@ from string import whitespace, punctuation, digits
 
 class DatabaseManager:
     """Perform actions on sqlite database."""
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str, db_configuration: dict):
+        self.cursor = None
         self.db_name = db_name
-        with pyodbc.connect("Driver=SQLite3 ODBC Driver;"f"Database={db_name}.db", autocommit=True) as db_conn:
-            self.cursor = db_conn.cursor()
+        self.db_configuration = db_configuration
+        self.create_database()
 
     def create_database(self):
         """Create new database with defined name if not exists."""
-        create_db_query = f"""
-            IF NOT EXISTS (
-                SELECT name
-                FROM sys.databases
-                WHERE name = '{self.db_name}'
-            )
-            BEGIN
-                CREATE DATABASE {self.db_name}
-            END;"""
-        self.cursor.execute(create_db_query)
-        print(f'Database "{self.db_name}" created successfully.')
+        conn = sqlite3.connect(f'{self.db_name}.db')
+        conn.close()
+
+    def connect_to_database(self):
+        """Connect to the database."""
+        with pyodbc.connect("Driver=Devart ODBC Driver for SQLite;"f"Database={self.db_name}.db", autocommit=True) as conn:
+            self.cursor = conn.cursor()
+
+    def create_database_structure(self):
+        """Create database tables with the given database configuration."""
+        for table_name, columns_details in self.db_configuration.items():
+            self.create_table(table_name, columns_details)
 
     def create_table(self, table_name: str, table_configuration: dict):
         """
@@ -40,6 +43,7 @@ class DatabaseManager:
         columns_details = [f'{column_name} {datatype}' for column_name, datatype in table_configuration.items()]
         columns_config = ', '.join(columns_details)
         self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} ({columns_config});')
+        print(f'Created "{table_name}" table.')
 
     def check_for_duplicates(self, table_name: str = None, conditions: dict = None):
         """
@@ -77,7 +81,7 @@ class DatabaseManager:
                 'news_text': input_params.get('text'),
                 'news_city': input_params.get('city')
             }
-        elif category == 'private_ad':
+        elif category == 'private ad':
             table_name = f'{category}s'
             conditions = {
                 'private_ad_text': input_params.get('text'),
@@ -91,11 +95,14 @@ class DatabaseManager:
                 'journal_author_mood': input_params.get('mood')
             }
 
+        print(f"Table name: {table_name}")
+        print(F"Conditions: {conditions}")
         if table_name:
             if self.check_for_duplicates(table_name, conditions):
                 sql_insert = f"""
                 INSERT INTO {table_name} ({", ".join(conditions.keys())})
                 VALUES ('{"', '".join(conditions.values())}');"""
+                print(sql_insert)
                 self.cursor.execute(sql_insert)
 
 

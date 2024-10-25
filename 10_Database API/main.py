@@ -75,10 +75,9 @@ DB_TABLES_CONFIG = {
 }
 
 # Connect to database.
-db = DatabaseManager(db_name='feeds')
-db.create_database()
-for table_name, columns_details in DB_TABLES_CONFIG.items():
-    db.create_table(table_name, columns_details)
+db = DatabaseManager(db_name='feeds', db_configuration=DB_TABLES_CONFIG)
+db.connect_to_database()
+db.create_database_structure()
 
 # Create new feed file if not exists.
 Feed.create_feed_file()
