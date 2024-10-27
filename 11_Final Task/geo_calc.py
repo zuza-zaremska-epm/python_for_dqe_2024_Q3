@@ -2,6 +2,7 @@ import pyodbc
 import sqlite3
 
 from geopy.distance import geodesic
+from typing import Tuple
 
 
 class DatabaseManager:
@@ -47,11 +48,12 @@ class DatabaseManager:
 
         print(f'Created "{table_name}" table.')
 
-    def check_for_duplicates(self, table_name: str = None, conditions: dict = None):
+    def check_for_duplicates(self, table_name: str = None, conditions: dict = None) -> bool:
         """
         Checks if in the table data already exists.
         :param table_name: name of the table
         :param conditions: collection of record details
+        :return: duplicate check status
         """
         if conditions:
             conditions = [f"{column_name} = {value}" for column_name, value in conditions.items()]
@@ -66,9 +68,9 @@ class DatabaseManager:
             cursor.close()
 
             if result == 0:
-                return True
-            else:
                 return False
+            else:
+                return True
 
     def save_data(self, details: dict):
         """
@@ -79,7 +81,7 @@ class DatabaseManager:
         conditions = details.get('conditions')
 
         if table_name and conditions:
-            if self.check_for_duplicates(table_name, conditions):
+            if not self.check_for_duplicates(table_name, conditions):
                 values = [str(value) for value in conditions.values()]
 
                 sql_insert = f"""
@@ -95,7 +97,12 @@ class DatabaseManager:
                 except pyodbc.Error as e:
                     print(f"Error: {e}")
 
-    def fetch_data(self, details: dict):
+    def fetch_data(self, details: dict) -> list:
+        """
+        Return results matching given conditions.
+        :param details: conditions to search
+        :return: found results
+        """
         table_name = details['table_name']
         filters = details['filters']
 
@@ -152,10 +159,12 @@ class GeoCalculator:
             self.current_pair.append(city)
             self.current_pair.sort()
 
-    def get_city_coordinates(self, city_name):
+    def get_city_coordinates(self, city_name) -> Tuple[float, float]:
         """
         Get city coordinates from the storage or
         from the user is missing and save in the storage.
+        :param city_name: name of the city
+        :return: longitude, latitude
         """
         query_details = {
             'table_name': 'cities',
