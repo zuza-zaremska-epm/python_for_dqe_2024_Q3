@@ -16,8 +16,10 @@ while True:
     geo_calc.calculate_distance()
 
     next_calc = input('Do you want to calculate new distance? (y/n)').lower()
+    print()
     if next_calc not in ['yes', 'y']:
-        print('Session closed.')
+        print('Session closed.\n')
         break
 
 geo_calc.display_calculated_distances()
+geo_calc.display_longest_distance()

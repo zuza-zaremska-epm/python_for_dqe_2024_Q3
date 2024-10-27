@@ -214,8 +214,19 @@ class GeoCalculator:
             }
         }
         self.storage.save_data(distance_details)
+        self.current_pair.clear()
 
     def display_calculated_distances(self):
-        """Prints all calculated distances during current session."""
+        """Display all calculated distances during current session."""
         for order, distance_info in enumerate(self.calculated_distances):
             print(f"{order+1}. {distance_info}")
+
+    def display_longest_distance(self):
+        """Display the longest calculated distance."""
+
+        cursor = self.storage.conn.cursor()
+        cursor.execute("SELECT * FROM distances ORDER BY distance_km DESC LIMIT 1;")
+        row = cursor.fetchone()
+        cursor.close()
+
+        print(f'\nThe longest calculated distance is {row.distance_km} km between {row.city_a} and {row.city_b}.')
