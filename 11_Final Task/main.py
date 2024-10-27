@@ -17,5 +17,7 @@ while True:
 
     next_calc = input('Do you want to calculate new distance? (y/n)').lower()
     if next_calc not in ['yes', 'y']:
-        print('Results saved.')
+        print('Session closed.')
         break
+
+geo_calc.display_calculated_distances()

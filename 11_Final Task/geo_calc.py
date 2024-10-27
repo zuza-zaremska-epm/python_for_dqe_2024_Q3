@@ -68,10 +68,9 @@ class DatabaseManager:
             if result == 0:
                 return True
             else:
-                print('Data already in the database.')
                 return False
 
-    def insert_data(self, details: dict):
+    def save_data(self, details: dict):
         """
         Inserts data into matching table.
         :param details: data for insertion
@@ -91,6 +90,8 @@ class DatabaseManager:
                     cursor = self.conn.cursor()
                     cursor.execute(sql_insert)
                     cursor.close()
+
+                    print('Data saved.')
                 except pyodbc.Error as e:
                     print(f"Error: {e}")
 
@@ -116,17 +117,23 @@ class GeoCalculator:
     def __init__(self):
         self.storage = None
         self.cities_details = {}
-        self.current_pair = set()
+        self.calculated_distances = []
+        self.current_pair = []
 
     def create_geo_storage(self):
-        # TODO: Save calculated distance.
         """Create storage for geographic data."""
         db_structure_conf = {
             "cities": {
-                "id": "INT PRIMARY KEY",
+                "city_id": "INT PRIMARY KEY",
                 "city_name": "TEXT",
                 "longitude": "FLOAT",
                 "latitude": "FLOAT"
+            },
+            'distances': {
+                'distance_id': 'INT PRIMARY KEY',
+                'city_a': 'TEXT',
+                'city_b': 'TEXT',
+                'distance_km': 'FLOAT'
             }
         }
 
@@ -137,11 +144,13 @@ class GeoCalculator:
 
     def get_city_details(self):
         """Get from the user city details."""
-        city = input('Provide name of the city A: ').upper()
+        city = input('Provide city name: ').upper()
         long, lat = self.get_city_coordinates(city)
         print(f'City {city}: long: {long}, lat: {lat}')
         self.cities_details[city] = {'longitude': long, 'latitude': lat}
-        self.current_pair.add(city)
+        if city not in self.current_pair:
+            self.current_pair.append(city)
+            self.current_pair.sort()
 
     def get_city_coordinates(self, city_name):
         """
@@ -153,7 +162,6 @@ class GeoCalculator:
             'filters': [f"UPPER(city_name) = '{city_name}'"]
         }
         results = self.storage.fetch_data(query_details)
-        print(results)
         if results:
             row = results[0]
             return row.longitude, row.latitude
@@ -165,7 +173,7 @@ class GeoCalculator:
                     long = float(long)
                     lat = float(lat)
 
-                    insert_details = {
+                    city_details = {
                         "table_name": "cities",
                         "conditions": {
                             "city_name": f"'{city_name}'",
@@ -173,7 +181,7 @@ class GeoCalculator:
                             "latitude": lat
                         }
                     }
-                    self.storage.insert_data(insert_details)
+                    self.storage.save_data(city_details)
 
                     return long, lat
                 except TypeError:
@@ -193,4 +201,21 @@ class GeoCalculator:
 
         # Calculate the distance between given cities.
         distance_km = round(geodesic(city_a, city_b).kilometers, 2)
-        print(f'Distance between {" and ".join(self.current_pair)} is equal {distance_km} km.')
+        distance_info = f'Distance between {" and ".join(self.current_pair)}: {distance_km} km.'
+        print(distance_info)
+        self.calculated_distances.append(distance_info)
+
+        distance_details = {
+            "table_name": "distances",
+            "conditions": {
+                "city_a": f"'{self.current_pair[0]}'",
+                "city_b": f"'{self.current_pair[1]}'",
+                "distance_km": distance_km
+            }
+        }
+        self.storage.save_data(distance_details)
+
+    def display_calculated_distances(self):
+        """Prints all calculated distances during current session."""
+        for order, distance_info in enumerate(self.calculated_distances):
+            print(f"{order+1}. {distance_info}")
