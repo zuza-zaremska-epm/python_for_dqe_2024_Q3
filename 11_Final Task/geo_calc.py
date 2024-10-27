@@ -1,6 +1,8 @@
 import pyodbc
 import sqlite3
 
+from geopy.distance import geodesic
+
 
 class DatabaseManager:
     """Perform actions on sqlite database."""
@@ -114,8 +116,10 @@ class GeoCalculator:
     def __init__(self):
         self.storage = None
         self.cities_details = {}
+        self.current_pair = set()
 
     def create_geo_storage(self):
+        # TODO: Save calculated distance.
         """Create storage for geographic data."""
         db_structure_conf = {
             "cities": {
@@ -137,6 +141,7 @@ class GeoCalculator:
         long, lat = self.get_city_coordinates(city)
         print(f'City {city}: long: {long}, lat: {lat}')
         self.cities_details[city] = {'longitude': long, 'latitude': lat}
+        self.current_pair.add(city)
 
     def get_city_coordinates(self, city_name):
         """
@@ -174,3 +179,18 @@ class GeoCalculator:
                 except TypeError:
                     print(TypeError)
                     print('Provided incorrect data - please try again.')
+
+    def calculate_distance(self):
+        """Calculate distance between the cities in the current pair."""
+        cities_cords = []
+        for city in self.current_pair:
+            cords = self.cities_details[city]
+            cities_cords.append(cords)
+
+        # Coordinates for two locations (latitude, longitude)
+        city_a = (cities_cords[0]['latitude'], cities_cords[0]['longitude'])
+        city_b = (cities_cords[1]['latitude'], cities_cords[0]['longitude'])
+
+        # Calculate the distance between given cities.
+        distance_km = round(geodesic(city_a, city_b).kilometers, 2)
+        print(f'Distance between {" and ".join(self.current_pair)} is equal {distance_km} km.')

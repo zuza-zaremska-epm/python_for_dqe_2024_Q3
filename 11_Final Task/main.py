@@ -8,6 +8,14 @@ from geo_calc import GeoCalculator
 geo_calc = GeoCalculator()
 geo_calc.create_geo_storage()
 
+while True:
+    # Get data of two different countries.
+    while len(geo_calc.current_pair) < 2:
+        geo_calc.get_city_details()
 
-for city in range(2):
-    geo_calc.get_city_details()
+    geo_calc.calculate_distance()
+
+    next_calc = input('Do you want to calculate new distance? (y/n)').lower()
+    if next_calc not in ['yes', 'y']:
+        print('Results saved.')
+        break
