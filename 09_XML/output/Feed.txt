@@ -1,0 +1,108 @@
+NEWS FEED
+
+--- NEWS ---
+This is the news text from input txt file 1.
+Kraków, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+ This iz your homework, copy these text to variable.
+
+
+
+ You need to normalize it from letter cases point of view. Also, create one more sentence with last words of each existing sentence and add it to the end of this paragraph.
+
+
+
+ It iz misspelling here. Fix"iz" with correct "is", but only when it iz a mistake.
+
+
+
+ Last iz to calculate number of whitespace characters in this tex. Carefull, not only spaces, but all whitespaces. I got 87.
+Actual until: 2024-10-31 (10 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 1.
+I feel happy today.
+Susan, 2024-10-21 18:03
+
+--- NEWS ---
+This is the news text from input txt file 2.
+Gdańsk, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+This is the private advertisement text from input txt file 2.
+Actual until: 2024-10-26 (5 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 2.
+I feel unhappy today.
+Jenny, 2024-10-21 18:03
+
+--- NEWS ---
+This is the news text from input json file 4.
+Tomaszów Mazowiecki, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+Some private ad from input json file 4.
+Actual until: 2024-12-15 (55 days left)
+
+--- JOURNAL ---
+This is journal text from input json file 4.
+I feel Confused today.
+Stephan, 2024-10-21 18:03
+
+--- NEWS ---
+This is the news text from input xml file 6.
+Olsztyn, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+This is the private advertisement text from xml input file 6.
+Actual until: 2024-11-11 (21 days left)
+
+--- JOURNAL ---
+This is my note text from input xml file 6.
+I feel Happy today.
+Jenny, 2024-10-21 18:03
+
+--- NEWS ---
+This is the news text from input txt file 3 about łódź.
+Łódź, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+This is the private advertisement text from input txt file 3.
+Actual until: 2024-12-31 (71 days left)
+
+--- JOURNAL ---
+This is my journal text from input txt file 3.
+I feel happy today.
+Susan, 2024-10-21 18:03
+
+--- NEWS ---
+This is the news text from input json file 5.
+London, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+Some private ad from input json file 5.
+Actual until: 2024-11-29 (39 days left)
+
+--- JOURNAL ---
+This is journal text from input json file 5.
+I feel Adorable today.
+Jenny, 2024-10-21 18:03
+
+--- PRIVATE AD ---
+This is text manually inserted for the private add.
+Actual until: 2025-01-01 (72 days left)
+
+--- NEWS ---
+This is the news text from custom input xml file 7.
+Gdańsk, 2024-10-21 18:05
+
+--- PRIVATE AD ---
+This is the private advertisement text from custom input xml file 7.
+Actual until: 2023-02-10 (-619 days left)
+
+--- JOURNAL ---
+This is my note text from custom input xml file 7.
+I feel Sad today.
+Simon, 2024-10-21 18:05
