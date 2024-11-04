@@ -1,0 +1,18 @@
+<newsFeed>
+    <feed id="1">
+        <category>news</category>
+        <text>This is the news text from custom input xml file 7.</text>
+        <city>Gdańsk</city>
+    </feed>
+    <feed id="2">
+        <category>private ad</category>
+        <text>This is the private advertisement text from custom input xml file 7.</text>>
+        <exp_date>02-10-2023</exp_date>
+    </feed>
+    <feed id="3">
+        <category>journal</category>
+        <text>This is my note text from custom input xml file 7.</text>>
+        <name>Simon</name>
+        <mood>Sad</mood>
+    </feed>
+</newsFeed>
